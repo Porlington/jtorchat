@@ -189,7 +189,7 @@ Logger.log(Logger.WARNING, this.getClass(), "answer with error until you press s
 
 	public void sendStopMessage() {
 		try {
-			this.buddy.sendRaw("file_stop_receiving " + this.id);
+			this.buddy.sendRaw("file_stop_sending " + this.id);
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 			try {
