@@ -287,6 +287,8 @@ public class Broadcast {
 		public void onMessage(Buddy buddy, String s) {}
 		public void onNewBuddy(Buddy buddy) {}
 		public void onBuddyRemoved(Buddy buddy) {}
+		public void onBuddySetHoly(Buddy buddy) {}
+		public void onBuddySetBlackList(Buddy buddy) {}
 	}
 
 	public static void sendMyTags() {

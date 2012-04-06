@@ -3,13 +3,12 @@ package net.tsu.TCPort.FileTransfer;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
 import net.tsu.TCPort.APIManager;
 import net.tsu.TCPort.Buddy;
 import net.tsu.TCPort.Logger;
-import net.tsu.TCPort.Gui.ChatWindow;
-import net.tsu.TCPort.Gui.Gui;
 import net.tsu.TCPort.listeners.CommandListener;
 import net.tsu.TCPort.listeners.IncomingCommandListener;
 import net.tsu.TCPort.util.Util;
@@ -66,10 +65,22 @@ public class FileTransfer {
 				
 				boolean flag = buddy.isFullyConnected();
 				
-				if (command.startsWith("filename")) {
-				Gui.getChatWindow(buddy, true, true).append("Time Stamp", "(" + ChatWindow.getTime() + ") ");
-				Gui.getChatWindow(buddy, true, true).append("Them", " --> " + "Try to start File-Transfer but I'm not Holy!!!" + "\n");
+				
+				// cheap seperation for now
+				try {
+					Class<?> c = Class.forName("net.tsu.TCPort.Gui.Gui"); // will ClassNotFoundException here if no Gui class
+					Object o = c.getDeclaredMethod("getChatWindow", Buddy.class, boolean.class, boolean.class).invoke(null, buddy, true, true);
+					Class<?> cw = Class.forName("net.tsu.TCPort.Gui.ChatWindow");
+					cw.getMethod("append", String.class, String.class).invoke(o, "Time Stamp", "(" + cw.getDeclaredMethod("getTime").invoke(null) + ") ");
+					cw.getMethod("append", String.class, String.class).invoke(o, "Them", " --> " + "Try to start File-Transfer but I'm not Holy!!!" + "\n");
+				} catch (ClassNotFoundException cnfe) {
+					cnfe.printStackTrace();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 
+//				Gui.getChatWindow(buddy, true, true).append("Time Stamp", "(" + ChatWindow.getTime() + ") ");
+//				Gui.getChatWindow(buddy, true, true).append("Them", " --> " + "Try to start File-Transfer but I'm not Holy!!!" + "\n");
 				
 				if (flag)
 				{
@@ -79,7 +90,7 @@ public class FileTransfer {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-				}}
+				}
 				}
 				
 			} else if (command.startsWith("filedata")) {

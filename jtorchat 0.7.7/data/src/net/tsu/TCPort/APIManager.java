@@ -63,5 +63,19 @@ public class APIManager {
 		for (APIListener apil : listeners)
 			apil.onNewBuddy(buddy);
 	}
+	
+	public static void fireBuddySetBlackList(Buddy buddy) {
+//		System.out.println("[API] new Buddy: " + buddy.getAddress());
+		Logger.log(Logger.DEBUG, "API", "Buddy added to blacklist: " + buddy.getAddress());
+		for (APIListener apil : listeners)
+			apil.onBuddySetBlackList(buddy);
+	}
+	
+	public static void fireBuddySetHoly(Buddy buddy) {
+//		System.out.println("[API] new Buddy: " + buddy.getAddress());
+		Logger.log(Logger.DEBUG, "API", "Buddy set as holy: " + buddy.getAddress());
+		for (APIListener apil : listeners)
+			apil.onBuddySetHoly(buddy);
+	}
 
 }

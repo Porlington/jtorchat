@@ -9,10 +9,6 @@ import java.net.Socket;
 import java.util.Random;
 import java.util.Scanner;
 
-import net.tsu.TCPort.Gui.Tray;
-
-
-
 public class Buddy {
 
 	public static final byte OFFLINE = 0;
@@ -221,7 +217,7 @@ public class Buddy {
 		if (this.status != nstatus) {
 			APIManager.fireStatusChange(this, nstatus, status);
 			status = nstatus;
-			Tray.updateTray();
+//			Tray.updateTray(); // what was this here for, shouldnt it be in the status change code? or is this attempting to update when our own buddy changes? possibly move to gui listener.
 		}
 	}
 

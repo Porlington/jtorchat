@@ -3,9 +3,7 @@ package net.tsu.TCPort;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-
-import net.tsu.TCPort.Gui.ChatWindow;
-import net.tsu.TCPort.Gui.Log;
+import java.lang.reflect.Method;
 
 public class Logger {
 	public static final PrintStream oldOut;
@@ -29,7 +27,16 @@ public class Logger {
 	
 				@Override
 				public void write(int b) throws IOException {
-					Log.updateOut(String.valueOf((char) b));
+					// cheap seperation for now
+					try {
+						Class<?> c = Class.forName("net.tsu.TCPort.Gui.Log"); // will ClassNotFoundException here if no Log class
+						c.getDeclaredMethod("updateOut", String.class).invoke(null, String.valueOf((char) b));
+					} catch (ClassNotFoundException cnfe) {
+						cnfe.printStackTrace();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+//					Log.updateOut(String.valueOf((char) b));
 				}
 				
 			}));
@@ -37,7 +44,16 @@ public class Logger {
 	
 				@Override
 				public void write(int b) throws IOException {
-					Log.updateErr(String.valueOf((char) b));
+					// cheap seperation for now
+					try {
+						Class<?> c = Class.forName("net.tsu.TCPort.Gui.Log"); // will ClassNotFoundException here if no Log class
+						c.getDeclaredMethod("updateErr", String.class).invoke(null, String.valueOf((char) b));
+					} catch (ClassNotFoundException cnfe) {
+						cnfe.printStackTrace();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+//					Log.updateErr(String.valueOf((char) b));
 //					oldOut.print(String.valueOf((char) b));
 				}
 				
@@ -56,9 +72,21 @@ public class Logger {
 			if (logLevel >= i) {
 				if (usingLog) {
 					try {
-						Log.append("[" + ChatWindow.getTime() + " - ", "Time Stamp");
-						Log.append(s + "] ", "Class-t");
-						Log.append(string + "\n", null);
+						// cheap seperation for now
+						try {
+							Class<?> c = Class.forName("net.tsu.TCPort.Gui.Log"); // will ClassNotFoundException here if no Log class
+							Method meth = c.getDeclaredMethod("append", String.class, String.class);
+							meth.invoke(null, "[" + Class.forName("net.tsu.TCPort.Gui.ChatWindow").getDeclaredMethod("getTime").invoke(null) + " - ", "Time Stamp");
+							meth.invoke(null, s + "] ", "Class-t");
+							meth.invoke(null, string + "\n", null);
+						} catch (ClassNotFoundException cnfe) {
+							cnfe.printStackTrace();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+//						Log.append("[" + ChatWindow.getTime() + " - ", "Time Stamp");
+//						Log.append(s + "] ", "Class-t");
+//						Log.append(string + "\n", null);
 					} catch (Exception e) {
 						System.setErr(oldOut);
 						System.setOut(oldOut);
@@ -97,9 +125,21 @@ public class Logger {
 				}
 				if (usingLog) {
 					try {
-						Log.append("[" + ChatWindow.getTime() + " - ", "Time Stamp");
-						Log.append(o.getClass().getName() + "] ", "Class-c");
-						Log.append(string + "\n", null);
+						// cheap seperation for now
+						try {
+							Class<?> c = Class.forName("net.tsu.TCPort.Gui.Log"); // will ClassNotFoundException here if no Log class
+							Method meth = c.getDeclaredMethod("append", String.class, String.class);
+							meth.invoke(null, "[" + Class.forName("net.tsu.TCPort.Gui.ChatWindow").getDeclaredMethod("getTime").invoke(null) + " - ", "Time Stamp");
+							meth.invoke(null, o.getClass().getName() + "] ", "Class-c");
+							meth.invoke(null, string + "\n", null);
+						} catch (ClassNotFoundException cnfe) {
+							cnfe.printStackTrace();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+//						Log.append("[" + ChatWindow.getTime() + " - ", "Time Stamp");
+//						Log.append(o.getClass().getName() + "] ", "Class-c");
+//						Log.append(string + "\n", null);
 					} catch (Exception e) {
 						System.setErr(oldOut);
 						System.setOut(oldOut);

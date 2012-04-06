@@ -15,7 +15,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 
-import net.tsu.TCPort.Gui.Gui;
+import net.tsu.TCPort.listeners.APIListener;
 
 
 public class BuddyList {
@@ -36,12 +36,12 @@ public class BuddyList {
 			e.printStackTrace();
 		}
 		BuddyList.black.put(b.getAddress(), b);
-		Gui.blacklist(b);
+		APIManager.fireBuddySetBlackList(b);
 	}
 	
 	public static void addHoly(Buddy b) {
 		BuddyList.holy.put(b.getAddress(), b);
-		Gui.holylist(b);
+		APIManager.fireBuddySetHoly(b);
 	}
 	
 	public static void loadBuddies() throws FileNotFoundException {
@@ -89,7 +89,7 @@ public class BuddyList {
 			if (buds.get(l.substring(0, 16)).getAddress().equals(l.substring(0, 16)))
 			{
 			BuddyList.black.put(l.substring(0, 16), buds.get(l.substring(0, 16)));
-			Gui.blacklist(buds.get(l.substring(0, 16)));
+			APIManager.fireBuddySetBlackList(buds.get(l.substring(0, 16)));
 			}
 			}
 	}
@@ -112,7 +112,7 @@ public class BuddyList {
 				if (buds.get(l.substring(0, 16)).getAddress().equals(l.substring(0, 16)))
 				{
 				BuddyList.holy.put(l.substring(0, 16), buds.get(l.substring(0, 16)));
-				Gui.holylist(buds.get(l.substring(0, 16)));
+				APIManager.fireBuddySetHoly(buds.get(l.substring(0, 16)));
 				}
 				}
 		}

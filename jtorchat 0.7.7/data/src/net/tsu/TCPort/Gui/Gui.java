@@ -883,6 +883,14 @@ public static void pardon(Buddy buddy) {
 				jt.expandRow(0);
 			}
 		}
+		
+		public void onBuddySetHoly(Buddy buddy) {
+			holylist(buddy);
+		}
+
+		public void onBuddySetBlackList(Buddy buddy) {
+			blacklist(buddy);
+		}
 	}
 
 	public JMenu getFileMenu() {
