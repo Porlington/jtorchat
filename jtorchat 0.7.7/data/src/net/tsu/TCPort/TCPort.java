@@ -10,9 +10,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-
 public class TCPort {
-    public static String base_pwd = null;
+	public static String base_pwd = null;
 	public static String profile_name; // = "JTCDev-Tsu";
 	public static String profile_text; // = "JTCDev-Text";
 	public static String status = "available"; // available away xa
@@ -20,25 +19,20 @@ public class TCPort {
 	@SuppressWarnings("unused")
 	private static boolean halted;
 
-	
-	
 	public static void main(String[] args) {
-		
 
-		
 		// Set Base-Path by Problem
-		if (args.length > 0)
-		{
-		base_pwd = args[0]+"/";
+		if (args.length > 0) {
+			base_pwd = args[0] + "/";
 		}
-		
-		
+
 		try {
-			if (getLogInstance() != null)
-			{
-			if(Config.visiblelog == 1) {getLogInstance().setVisible(true);}
+			if (getLogInstance() != null) {
+				if (Config.visiblelog == 1) {
+					getLogInstance().setVisible(true);
+				}
 			}
-			
+
 			Runtime.getRuntime().addShutdownHook(new Thread() {
 
 				@Override
@@ -62,14 +56,10 @@ public class TCPort {
 					}
 				}
 			});
-			
-			
 
-TorLoader.loadTor();
-			
-				
-				
-				// new Gui().init();
+			TorLoader.loadTor();
+
+			// new Gui().init();
 			runInit("net.tsu.TCPort.Gui.Gui");
 			launched = true;
 			try {
@@ -84,7 +74,7 @@ TorLoader.loadTor();
 				JTextField jtf = new JTextField();
 				jtf.setEditable(false);
 				jtf.setText("Config.us: " + Config.us + " is invalid.");
-				JOptionPane.showMessageDialog(null, jtf, "Fatal Error", JOptionPane.PLAIN_MESSAGE);	
+				JOptionPane.showMessageDialog(null, jtf, "Fatal Error", JOptionPane.PLAIN_MESSAGE);
 				// System.exit(-1);
 			}
 
@@ -92,9 +82,7 @@ TorLoader.loadTor();
 			runStaticInit("net.tsu.TCPort.Broadcast.Broadcast");
 			runStaticInit("net.tsu.TCPort.FileTransfer.FileTransfer");
 			// FileTransfer.init(); // doesnt work atm
-			
-			
-			
+
 			if (!BuddyList.buds.containsKey(Config.us)) {
 				new Buddy(Config.us, null).connect();
 			}
@@ -119,7 +107,8 @@ TorLoader.loadTor();
 								} else if (l.startsWith("raw ")) { // send raw messaage to a buddy
 									BuddyList.buds.get(l.split(" ")[1]).sendRaw(l.split(" ", 3)[2]);
 
-							}}
+								}
+							}
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -127,8 +116,7 @@ TorLoader.loadTor();
 						e.printStackTrace();
 					}
 				}
-				
-				
+
 			}, "Starting console.", "Console thread");
 			ThreadManager.registerWork(ThreadManager.DAEMON, new Runnable() {
 
@@ -136,30 +124,24 @@ TorLoader.loadTor();
 				public void run() {
 					while (true) {
 						try {
-							
-							if (Config.nowstart != "")
-							{
+
+							if (Config.nowstart != "") {
 								BuddyList.loadBuddiesRemote(Config.nowstart);
 								Config.nowstart = "";
 							}
-							if (Config.nowstartupdate != "")
-							{
+							if (Config.nowstartupdate != "") {
 								Config.LastCheck = Update.loadUpdate(Config.nowstartupdate);
-								
-								
-								if (Config.LastCheck != "close")
-								{
-								JTextField jtf = new JTextField();
-								jtf.setEditable(false);
-								jtf.setText(Config.LastCheck);
-					     		JOptionPane.showMessageDialog(null, jtf, "Update Check", JOptionPane.PLAIN_MESSAGE);					
+
+								if (Config.LastCheck != "close") {
+									JTextField jtf = new JTextField();
+									jtf.setEditable(false);
+									jtf.setText(Config.LastCheck);
+									JOptionPane.showMessageDialog(null, jtf, "Update Check", JOptionPane.PLAIN_MESSAGE);
 								}
-					     		
-					     		
-					     		Config.nowstartupdate = "";
+
+								Config.nowstartupdate = "";
 							}
 
-							
 							for (Buddy b : BuddyList.buds.values()) {
 								if (b.getConnectTime() != -1 && System.currentTimeMillis() - b.getConnectTime() > Config.CONNECT_TIMEOUT * 1000) {
 									// checks if buddy hasnt finished connecting within CONNECT_TIMEOUT seconds
@@ -174,7 +156,7 @@ TorLoader.loadTor();
 									b.connect();
 									Logger.log(Logger.INFO, "Status Thread", "Connection reset for " + b.getAddress());
 								}
-								
+
 								if (b.getStatus() >= Buddy.ONLINE && (b.ourSock == null || b.theirSock == null || b.ourSock.isClosed() || b.theirSock.isClosed())) {
 									if (b.ourSock != null)
 										b.ourSock.close();
@@ -215,7 +197,6 @@ TorLoader.loadTor();
 					}
 				}
 			}, "Starting status thread.", "Status thread");
-
 
 			Logger.log(Logger.INFO, "Init", "Done.");
 			Logger.setOverride(false);
@@ -276,7 +257,6 @@ TorLoader.loadTor();
 		return null;
 	}
 
-
 	private static void runStaticInit(String string) {
 		try {
 			Class<?> c = Class.forName(string);
@@ -298,7 +278,6 @@ TorLoader.loadTor();
 			// ignored
 		}
 	}
-
 
 	public static void sendMyInfo() {
 		for (Buddy b : BuddyList.buds.values()) {

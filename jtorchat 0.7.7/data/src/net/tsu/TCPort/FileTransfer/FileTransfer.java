@@ -1,6 +1,5 @@
 package net.tsu.TCPort.FileTransfer;
 
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -38,93 +37,87 @@ public class FileTransfer {
 		// Util.readTillLinebreak(is)
 		@Override
 		public void onCommand(Buddy buddy, String command, InputStream is) {
-			
 
-			//Logger.oldOut.println("ft: " + command);
+			// Logger.oldOut.println("ft: " + command);
 			try {
-			if (command.startsWith("filename")) {
-				String[] spl = Util.readStringTillChar(is, '\n').split(" ", 4);
-				String id = spl[0];
-				long fileSize = Long.valueOf(spl[1]);
-				int blockSize = Integer.valueOf(spl[2]);
-				// remove all / and \ to be safe
-				String fileName = spl[3].replaceAll((char) 0 + "", "").replaceAll("/", "").replaceAll("\\\\", "");
-				String ext = fileName.split("\\.")[fileName.split("\\.").length - 1];
-				String base = fileName.substring(0, fileName.length() - ext.length());
-				if (base.trim().length() == 0)
-					fileName = base + fileName;
-				//Logger.oldOut.println("filename recieved from " + buddy + " | " + id + ", " + fileSize + ", " + blockSize + ", " + fileName + " | " + base + ", " + ext);
-				
-				if (buddy.getHoly())
-				{
-				Logger.log(Logger.NOTICE, "FileTransfer", "filename recieved from " + buddy + " | " + id + ", " + fileSize + ", " + blockSize + ", " + fileName + " | " + base + ", " + ext);
-				new FileReceiver(buddy, id, blockSize, fileSize, fileName);
-				}
-				else
-				{
-				
-				boolean flag = buddy.isFullyConnected();
-				
-				
-				// cheap seperation for now
-				try {
-					Class<?> c = Class.forName("net.tsu.TCPort.Gui.Gui"); // will ClassNotFoundException here if no Gui class
-					Object o = c.getDeclaredMethod("getChatWindow", Buddy.class, boolean.class, boolean.class).invoke(null, buddy, true, true);
-					Class<?> cw = Class.forName("net.tsu.TCPort.Gui.ChatWindow");
-					cw.getMethod("append", String.class, String.class).invoke(o, "Time Stamp", "(" + cw.getDeclaredMethod("getTime").invoke(null) + ") ");
-					cw.getMethod("append", String.class, String.class).invoke(o, "Them", " --> " + "Try to start File-Transfer but I'm not Holy!!!" + "\n");
-				} catch (ClassNotFoundException cnfe) {
-					cnfe.printStackTrace();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				if (command.startsWith("filename")) {
+					String[] spl = Util.readStringTillChar(is, '\n').split(" ", 4);
+					String id = spl[0];
+					long fileSize = Long.valueOf(spl[1]);
+					int blockSize = Integer.valueOf(spl[2]);
+					// remove all / and \ to be safe
+					String fileName = spl[3].replaceAll((char) 0 + "", "").replaceAll("/", "").replaceAll("\\\\", "");
+					String ext = fileName.split("\\.")[fileName.split("\\.").length - 1];
+					String base = fileName.substring(0, fileName.length() - ext.length());
+					if (base.trim().length() == 0)
+						fileName = base + fileName;
+					// Logger.oldOut.println("filename recieved from " + buddy + " | " + id + ", " + fileSize + ", " + blockSize + ", " + fileName + " | " + base + ", " + ext);
 
-//				Gui.getChatWindow(buddy, true, true).append("Time Stamp", "(" + ChatWindow.getTime() + ") ");
-//				Gui.getChatWindow(buddy, true, true).append("Them", " --> " + "Try to start File-Transfer but I'm not Holy!!!" + "\n");
-				
-				if (flag)
-				{
-					try {
-						buddy.sendMessage("/pa " + "You are not on the Holy list");
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				}
-				
-			} else if (command.startsWith("filedata")) {
-				String id = Util.readStringTillChar(is, ' ');
-				long start = Long.valueOf(Util.readStringTillChar(is, ' '));
-				String hash = Util.readStringTillChar(is, ' ');
-				byte[] data = Util.unescape(Util.readBytesTillChar(is, '\n'));
+					if (buddy.getHoly()) {
+						Logger.log(Logger.NOTICE, "FileTransfer", "filename recieved from " + buddy + " | " + id + ", " + fileSize + ", " + blockSize + ", " + fileName + " | " + base + ", " + ext);
+						new FileReceiver(buddy, id, blockSize, fileSize, fileName);
+					} else {
 
-				FileReceiver receiver = receivers.get(buddy.getAddress() + " " + id);
-				if (receiver != null) {
-					//int amountExpected = (int) ((receiver.fileSize - start) > receiver.blockSize ? receiver.blockSize : receiver.fileSize - start);
-					// ByteBuffer dataBuf = ByteBuffer.allocate(amountExpected);
-					//Logger.oldOut.println("amountExpected: " + amountExpected);
-					//int amountLeft = amountExpected - data.length;
-					//Logger.oldOut.println("amountLeft: " + amountLeft + " | " + (amountLeft == 1));
-					// dataBuf.limit(amountExpected);
-					// dataBuf.position(data.length()); // after the end of current data
-					// System.out.println(dataBuf.position() + " | " + data.length() + " | " + dataBuf.array().length);
+						boolean flag = buddy.isFullyConnected();
 
-					//Logger.oldOut.println("ft b");
-					receiver.data(start, hash, data);
-					//Logger.oldOut.println("ft c");
-				} else
-					try {
-						buddy.sendRaw("file_stop_sending " + id);
-					} catch (IOException e) {
-						e.printStackTrace();
+						// cheap seperation for now
 						try {
-							buddy.disconnect();
-						} catch (IOException ioe) {
-							// ignored
+							Class<?> c = Class.forName("net.tsu.TCPort.Gui.Gui"); // will ClassNotFoundException here if no Gui class
+							Object o = c.getDeclaredMethod("getChatWindow", Buddy.class, boolean.class, boolean.class).invoke(null, buddy, true, true);
+							Class<?> cw = Class.forName("net.tsu.TCPort.Gui.ChatWindow");
+							cw.getMethod("append", String.class, String.class).invoke(o, "Time Stamp", "(" + cw.getDeclaredMethod("getTime").invoke(null) + ") ");
+							cw.getMethod("append", String.class, String.class).invoke(o, "Them", " --> " + "Try to start File-Transfer but I'm not Holy!!!" + "\n");
+						} catch (ClassNotFoundException cnfe) {
+							cnfe.printStackTrace();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+						// Gui.getChatWindow(buddy, true, true).append("Time Stamp", "(" + ChatWindow.getTime() + ") ");
+						// Gui.getChatWindow(buddy, true, true).append("Them", " --> " + "Try to start File-Transfer but I'm not Holy!!!" + "\n");
+
+						if (flag) {
+							try {
+								buddy.sendMessage("/pa " + "You are not on the Holy list");
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 						}
 					}
-			}
+
+				} else if (command.startsWith("filedata")) {
+					String id = Util.readStringTillChar(is, ' ');
+					long start = Long.valueOf(Util.readStringTillChar(is, ' '));
+					String hash = Util.readStringTillChar(is, ' ');
+					byte[] data = Util.unescape(Util.readBytesTillChar(is, '\n'));
+
+					FileReceiver receiver = receivers.get(buddy.getAddress() + " " + id);
+					if (receiver != null) {
+						// int amountExpected = (int) ((receiver.fileSize - start) > receiver.blockSize ? receiver.blockSize : receiver.fileSize - start);
+						// ByteBuffer dataBuf = ByteBuffer.allocate(amountExpected);
+						// Logger.oldOut.println("amountExpected: " + amountExpected);
+						// int amountLeft = amountExpected - data.length;
+						// Logger.oldOut.println("amountLeft: " + amountLeft + " | " + (amountLeft == 1));
+						// dataBuf.limit(amountExpected);
+						// dataBuf.position(data.length()); // after the end of current data
+						// System.out.println(dataBuf.position() + " | " + data.length() + " | " + dataBuf.array().length);
+
+						// Logger.oldOut.println("ft b");
+						receiver.data(start, hash, data);
+						// Logger.oldOut.println("ft c");
+					} else
+						try {
+							buddy.sendRaw("file_stop_sending " + id);
+						} catch (IOException e) {
+							e.printStackTrace();
+							try {
+								buddy.disconnect();
+							} catch (IOException ioe) {
+								// ignored
+							}
+						}
+				}
 			} catch (IOException ioe) {
 				Logger.log(Logger.NOTICE, "FileTransfer", "IOException on " + buddy.toString(true) + " " + ioe.getLocalizedMessage());
 				try {
@@ -133,67 +126,64 @@ public class FileTransfer {
 					// ignored
 				}
 			}
-			//Logger.oldOut.println("end onc");
-		
+			// Logger.oldOut.println("end onc");
 
-				
-
-			
 		}
 
 		@Override
 		public void onCommand(Buddy buddy, String s) {
 
-			 if (s.startsWith("filedata_ok ")) {
-					String[] spl = s.split(" ", 3);
-					String id = spl[1];
-					long start = Long.valueOf(spl[2]);
+			if (s.startsWith("filedata_ok ")) {
+				String[] spl = s.split(" ", 3);
+				String id = spl[1];
+				long start = Long.valueOf(spl[2]);
 
-					FileSender sender = senders.get(buddy.getAddress() + " " + id);
-					if (sender != null)
-						sender.recievedOk(start);
-					else
+				FileSender sender = senders.get(buddy.getAddress() + " " + id);
+				if (sender != null)
+					sender.recievedOk(start);
+				else
+					try {
+						buddy.sendRaw("file_stop_receiving " + id);
+					} catch (IOException e) {
+						e.printStackTrace();
 						try {
-							buddy.sendRaw("file_stop_receiving " + id);
-						} catch (IOException e) {
-							e.printStackTrace();
-							try {
-								buddy.disconnect();
-							} catch (IOException ioe) {
-								// ignored
-							}
+							buddy.disconnect();
+						} catch (IOException ioe) {
+							// ignored
 						}
-				} else if (s.startsWith("filedata_error ")) {
-					String[] spl = s.split(" ", 3);
-					String id = spl[1];
-					long start = Long.valueOf(spl[2]);
+					}
+			} else if (s.startsWith("filedata_error ")) {
+				String[] spl = s.split(" ", 3);
+				String id = spl[1];
+				long start = Long.valueOf(spl[2]);
 
-					FileSender sender = senders.get(buddy.getAddress() + " " + id);
-					if (sender != null)
-						sender.restart(start);
-					else
+				FileSender sender = senders.get(buddy.getAddress() + " " + id);
+				if (sender != null)
+					sender.restart(start);
+				else
+					try {
+						buddy.sendRaw("file_stop_receiving " + id);
+					} catch (IOException e) {
+						e.printStackTrace();
 						try {
-							buddy.sendRaw("file_stop_receiving " + id);
-						} catch (IOException e) {
-							e.printStackTrace();
-							try {
-								buddy.disconnect();
-							} catch (IOException ioe) {
-								// ignored
-							}
+							buddy.disconnect();
+						} catch (IOException ioe) {
+							// ignored
 						}
-				} else if (s.startsWith("file_stop_sending ")) {
-					String id = s.split(" ", 2)[1]; // NOTE - in pytorchat this is done by self.id = self.blob doesnt make sense
+					}
+			} else if (s.startsWith("file_stop_sending ")) {
+				String id = s.split(" ", 2)[1]; // NOTE - in pytorchat this is done by self.id = self.blob doesnt make sense
 
-					FileSender sender = senders.get(buddy.getAddress() + " " + id);
-					if (sender != null)
-						sender.close();
-				} else if (s.startsWith("file_stop_receiving ")) {
-					String id = s.split(" ", 2)[1]; // NOTE - in pytorchat this is done by self.id = self.blob doesnt make sense
-					FileReceiver receiver = receivers.get(buddy.getAddress() + " " + id);
-					if (receiver != null)
-						receiver.close();
-				}
-		
-	}}
+				FileSender sender = senders.get(buddy.getAddress() + " " + id);
+				if (sender != null)
+					sender.close();
+			} else if (s.startsWith("file_stop_receiving ")) {
+				String id = s.split(" ", 2)[1]; // NOTE - in pytorchat this is done by self.id = self.blob doesnt make sense
+				FileReceiver receiver = receivers.get(buddy.getAddress() + " " + id);
+				if (receiver != null)
+					receiver.close();
+			}
+
+		}
+	}
 }

@@ -50,18 +50,14 @@ public class GUIContactAdd extends JFrame {
 		}
 	}
 
-	private void language()
-	{
-		
+	private void language() {
+
 		label1.setText(language.langtext[13]);
 		label2.setText(language.langtext[14]);
 		button1.setText(language.langtext[15]);
 
 	}
-	
-	
-	
-	
+
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY //GEN-BEGIN:initComponents
 		label1 = new JLabel();

@@ -17,14 +17,14 @@ public class Logger {
 	private static int logLevel = DEBUG;
 	private static boolean usingLog;
 	private static Object LOCK = new Object();
-	private static boolean override = true; 
-	
+	private static boolean override = true;
+
 	static {
 		oldOut = System.out;
 		boolean hasGUI = hasGUI();
 		if (hasGUI) {
 			System.setOut(new PrintStream(new OutputStream() {
-	
+
 				@Override
 				public void write(int b) throws IOException {
 					// cheap seperation for now
@@ -36,12 +36,12 @@ public class Logger {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-//					Log.updateOut(String.valueOf((char) b));
+					// Log.updateOut(String.valueOf((char) b));
 				}
-				
+
 			}));
 			System.setErr(new PrintStream(new OutputStream() {
-	
+
 				@Override
 				public void write(int b) throws IOException {
 					// cheap seperation for now
@@ -53,17 +53,17 @@ public class Logger {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-//					Log.updateErr(String.valueOf((char) b));
-//					oldOut.print(String.valueOf((char) b));
+					// Log.updateErr(String.valueOf((char) b));
+					// oldOut.print(String.valueOf((char) b));
 				}
-				
+
 			}));
 			usingLog = true; // reffering to Log class
 		}
 	}
 
 	public static void log(int i, String s, String string) {
-		synchronized(LOCK) {
+		synchronized (LOCK) {
 			if (i == FATAL) {
 				System.setErr(oldOut);
 				System.setOut(oldOut);
@@ -84,15 +84,15 @@ public class Logger {
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
-//						Log.append("[" + ChatWindow.getTime() + " - ", "Time Stamp");
-//						Log.append(s + "] ", "Class-t");
-//						Log.append(string + "\n", null);
+						// Log.append("[" + ChatWindow.getTime() + " - ", "Time Stamp");
+						// Log.append(s + "] ", "Class-t");
+						// Log.append(string + "\n", null);
 					} catch (Exception e) {
 						System.setErr(oldOut);
 						System.setOut(oldOut);
 						usingLog = false;
 					}
-				} 
+				}
 				if (!usingLog || override) {
 					if (logLevel <= WARNING)
 						oldOut.println("Log: !{" + s + "}! " + string);
@@ -104,7 +104,7 @@ public class Logger {
 			}
 		}
 	}
-	
+
 	private static boolean hasGUI() {
 		try {
 			Class.forName("net.tsu.TCPort.Gui.Gui");
@@ -114,9 +114,9 @@ public class Logger {
 		}
 		return false;
 	}
-	
+
 	public static void log(int i, Object o, String string) {
-		synchronized(LOCK) {
+		synchronized (LOCK) {
 			if (logLevel >= i) {
 				if (i == FATAL) {
 					System.setErr(oldOut);
@@ -137,15 +137,15 @@ public class Logger {
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
-//						Log.append("[" + ChatWindow.getTime() + " - ", "Time Stamp");
-//						Log.append(o.getClass().getName() + "] ", "Class-c");
-//						Log.append(string + "\n", null);
+						// Log.append("[" + ChatWindow.getTime() + " - ", "Time Stamp");
+						// Log.append(o.getClass().getName() + "] ", "Class-c");
+						// Log.append(string + "\n", null);
 					} catch (Exception e) {
 						System.setErr(oldOut);
 						System.setOut(oldOut);
 						usingLog = false;
 					}
-				} 
+				}
 				if (!usingLog || override) {
 					if (logLevel <= WARNING)
 						oldOut.println("Log: ![" + o.getClass().getCanonicalName() + "]! " + string);

@@ -19,7 +19,7 @@ public class GroupChat {
 		if (lis != null)
 			return;
 		APIManager.cmdListeners.put("groupmessage", lis = new Listener());
-//		APIManager.cmdListeners.put("groupmessage", lis);
+		// APIManager.cmdListeners.put("groupmessage", lis);
 	}
 
 	private static class Group {
@@ -36,15 +36,15 @@ public class GroupChat {
 		private Group(String id) throws NoSuchAlgorithmException {
 			this.id = id;
 			kp = RSAHelper.generateKeyPair();
-//			Collections.sort(participants);
+			// Collections.sort(participants);
 		}
-		
-	//	public void addParticipant(String address) {
-			
-	//	}
+
+		// public void addParticipant(String address) {
+
+		// }
 
 		public void getMessage(String sender, String content) {
-			
+
 		}
 
 	}
