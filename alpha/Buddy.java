@@ -57,8 +57,7 @@ public class Buddy {
 
 		this.cookie = generateCookie();
 
-		if (now) // Prevent flooding
-		{
+		if (now) {// Prevent flooding
 			BuddyList.addBuddy(this);
 		}
 	}
@@ -483,7 +482,7 @@ public class Buddy {
 
 	@Override
 	public String toString() {
-		return (name != null && name.length() > 0) ? name : (profile_name != null && profile_name.length() > 0) ? profile_name : "[" + address + "]"; // + " (" + address + ")";
+		return address.equals(Config.us) ? language.langtext[61] : (name != null && name.length() > 0) ? name : (profile_name != null && profile_name.length() > 0) ? profile_name : "[" + address + "]";
 	}
 
 	public byte getStatus() {
@@ -536,7 +535,7 @@ public class Buddy {
 	}
 
 	public String toString(boolean b) {
-		return address.equals(Config.us) ? language.langtext[61] : (profile_name != null && profile_name.length() > 0) ? profile_name + " (" + address + ")" : (name != null && name.length() > 0) ? name + " (" + address + ")" : "[" + address + "]"; // + " (" + address + ")";
+		return address.equals(Config.us) ? language.langtext[61] : (name != null && name.length() > 0) ? name + " (" + address + ")" : (profile_name != null && profile_name.length() > 0) ? profile_name + " (" + address + ")" : "[" + address + "]";
 	}
 
 	public boolean isFullyConnected() {

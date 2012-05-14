@@ -90,13 +90,9 @@ public class TCPort {
 			runStaticInit("fileTransfer.FileTransfer");
 			// FileTransfer.init(); // doesnt work atm
 
-			if (Config.firststart == 1) // We can delete it when we want
-			{
-				if (!BuddyList.buds.containsKey(Config.us)) {
-					Buddy b = new Buddy(Config.us, null, true);
-					b.setName(language.langtext[61]);
-					b.connect();
-				}
+			if (!BuddyList.buds.containsKey(Config.us)) {
+				Buddy b = new Buddy(Config.us, null, true);
+				b.reconnectAt = System.currentTimeMillis() + 20000; // give jtorchat(and tor, if it's only just starting up) 20 seconds before we try connect
 			}
 
 			ThreadManager.registerWork(ThreadManager.DAEMON, new Runnable() {
